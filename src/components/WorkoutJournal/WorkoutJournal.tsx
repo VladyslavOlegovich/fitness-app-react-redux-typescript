@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaCheck } from "react-icons/fa";
+
 import {
   Container,
   Row,
@@ -11,35 +12,48 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/reducers";
-import { addWorkout } from "../../store/actions/workoutJournalActions";
+import {
+  addWorkout,
+  deleteWorkout,
+} from "../../store/actions/workoutJournalActions";
 import { WorkoutData } from "../../store/reducers/workoutJournalReducer";
-
+import { v4 as uuidv4 } from "uuid";
 const WorkoutJournal: React.FC = () => {
   const dispatch = useDispatch();
-  const workout = useSelector((state: RootState) => state.workout);
+  // const workout = useSelector((state: RootState) => state.workout);
+  const workoutState = useSelector((state: RootState) => state.workout);
+  const workouts = workoutState.workouts;
 
-  const [workouts, setWorkouts] = useState<WorkoutData[]>([]);
+  const [workoutsList, setworkoutsList] = useState<WorkoutData[]>([]);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [date, setDate] = useState(workout.date);
-  const [title, setTitle] = useState(workout.title);
-  const [description, setDescription] = useState(workout.description);
+  const [date, setDate] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [completed, setCompleted] = useState(false);
 
   const handleAddWorkout = (e: React.FormEvent) => {
     e.preventDefault();
     const workoutData = {
+      id: uuidv4(),
       workouts,
       date,
       title,
       description,
+      completed,
     };
 
     dispatch(addWorkout(workoutData));
     console.log(workoutData);
-    setWorkouts([...workouts, workoutData]);
+    setworkoutsList([...workouts, workoutData]);
     setDate("");
     setTitle("");
     setDescription("");
+  };
+
+  const handleDeleteWorkout = (e: React.FormEvent, workoutId: string) => {
+    e.stopPropagation();
+    dispatch(deleteWorkout(workoutId));
   };
 
   const handleCardClick = (workout) => {
@@ -95,15 +109,32 @@ const WorkoutJournal: React.FC = () => {
 
       {/* Список карток-тренувань */}
       <Row>
-        {workout.workouts.map((workout, index) => (
-          <Col key={index} md={4} className="my-2">
+        {workouts.map((workout, index) => (
+          <Col key={workout.id} md={4} className="mb-2">
             <Card onClick={() => handleCardClick(workout)}>
               <Card.Body>
-                {workout.date} {workout.title} {workout.description}
+                #{index + 1}: {workout.date} {workout.title}{" "}
+                {workout.description}
               </Card.Body>
-              <Button variant="link" className="text-danger">
-                <FaTimes />
-              </Button>
+              <Card.Footer className="d-flex">
+                <div className="d-flex justify-content-between align-items-center w-100">
+                  <Form.Check
+                    type="checkbox"
+                    label="Completed"
+                    checked={workout.completed}
+                    onChange={(e) => {
+                      // Оновити стан виконання тренування
+                    }}
+                  />
+                  <Button
+                    variant="link"
+                    className="text-danger"
+                    onClick={(e) => handleDeleteWorkout(e, workout.id)}
+                  >
+                    <FaTimes />
+                  </Button>
+                </div>
+              </Card.Footer>
             </Card>
           </Col>
         ))}
