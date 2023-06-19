@@ -25,7 +25,9 @@ const WorkoutJournal: React.FC = () => {
   const workouts = workoutState.workouts;
 
   const [workoutsList, setworkoutsList] = useState<WorkoutData[]>([]);
-  const [selectedWorkout, setSelectedWorkout] = useState(null);
+  const [selectedWorkout, setSelectedWorkout] = useState<WorkoutData | null>(
+    null
+  );
   const [showModal, setShowModal] = useState(false);
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
@@ -56,7 +58,7 @@ const WorkoutJournal: React.FC = () => {
     dispatch(deleteWorkout(workoutId));
   };
 
-  const handleCardClick = (workout) => {
+  const handleCardClick = (workout: WorkoutData) => {
     setSelectedWorkout(workout);
     setShowModal(true);
   };
@@ -113,8 +115,8 @@ const WorkoutJournal: React.FC = () => {
           <Col key={workout.id} md={4} className="mb-2">
             <Card onClick={() => handleCardClick(workout)}>
               <Card.Body>
-                #{index + 1}: {workout.date} {workout.title}{" "}
-                {workout.description}
+                #{index + 1}: {workout.date}
+                <p>{workout.title}</p>
               </Card.Body>
               <Card.Footer className="d-flex">
                 <div className="d-flex justify-content-between align-items-center w-100">
@@ -145,7 +147,9 @@ const WorkoutJournal: React.FC = () => {
         <Modal.Header closeButton>
           <Modal.Title>Workout Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{/* Детальна інформація про тренування */}</Modal.Body>
+        <Modal.Body>
+          {selectedWorkout && selectedWorkout.description}
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
