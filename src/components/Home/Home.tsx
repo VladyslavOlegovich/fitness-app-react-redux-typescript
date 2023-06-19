@@ -3,7 +3,8 @@ import { Container, Row, Col, Image, Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/reducers";
 import { changePhoto, changeUserData } from "../../store/actions/userActions";
-const Home = () => {
+
+const Home: React.FC = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
 
