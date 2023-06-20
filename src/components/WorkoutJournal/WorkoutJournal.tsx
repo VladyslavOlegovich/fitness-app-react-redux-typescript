@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaTimes, FaCheck } from "react-icons/fa";
+import "./WorkoutJournal.css";
 
 import {
   Container,
@@ -15,6 +16,7 @@ import { RootState } from "../../store/reducers";
 import {
   addWorkout,
   deleteWorkout,
+  updateWorkouts,
 } from "../../store/actions/workoutJournalActions";
 import { WorkoutData } from "../../store/reducers/workoutJournalReducer";
 import { v4 as uuidv4 } from "uuid";
@@ -58,13 +60,31 @@ const WorkoutJournal: React.FC = () => {
     dispatch(deleteWorkout(workoutId));
   };
 
-  const handleCardClick = (workout: WorkoutData) => {
-    setSelectedWorkout(workout);
-    setShowModal(true);
+  const handleCardClick = (workout: WorkoutData, e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (!target.classList.contains("form-check-input")) {
+      setSelectedWorkout(workout);
+      setShowModal(true);
+    }
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleCheckboxChange = (e: React.FormEvent, workoutId: string) => {
+    e.stopPropagation();
+
+    const updatedWorkouts = workouts.map((workout) => {
+      if (workoutId === workout.id) {
+        return {
+          ...workout,
+          completed: !workout.completed,
+        };
+      }
+      return workout;
+    });
+    dispatch(updateWorkouts(updatedWorkouts));
   };
 
   return (
@@ -113,10 +133,14 @@ const WorkoutJournal: React.FC = () => {
       <Row>
         {workouts.map((workout, index) => (
           <Col key={workout.id} md={4} className="mb-2">
-            <Card onClick={() => handleCardClick(workout)}>
+            <Card
+              onClick={(e) => handleCardClick(workout, e)}
+              className={`card ${workout.completed ? "completed-workout" : ""}`}
+            >
               <Card.Body>
-                #{index + 1}: {workout.date}
-                <p>{workout.title}</p>
+                <p>№ {index + 1}</p>
+                <p> Дата: {workout.date}</p>
+                <p>Заголовок: {workout.title}</p>
               </Card.Body>
               <Card.Footer className="d-flex">
                 <div className="d-flex justify-content-between align-items-center w-100">
@@ -124,9 +148,7 @@ const WorkoutJournal: React.FC = () => {
                     type="checkbox"
                     label="Completed"
                     checked={workout.completed}
-                    onChange={(e) => {
-                      // Оновити стан виконання тренування
-                    }}
+                    onChange={(e) => handleCheckboxChange(e, workout.id)}
                   />
                   <Button
                     variant="link"

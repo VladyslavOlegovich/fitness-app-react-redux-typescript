@@ -3,6 +3,8 @@ import {
   AddWorkoutAction,
   DELETE_WORKOUT,
   DeleteWorkoutAction,
+  UPDATE_WORKOUTS,
+  UpdateWorkoutsAction,
 } from "../actions/workoutJournalActions";
 
 export interface WorkoutData {
@@ -13,31 +15,18 @@ export interface WorkoutData {
   completed: boolean;
 }
 
-// export interface WorkoutJournalState {
-//   workouts: WorkoutData[];
-//   id: string;
-//   date: string;
-//   title: string;
-//   description: string;
-//   completed: boolean;
-// }
 export interface WorkoutJournalState {
   workouts: WorkoutData[];
-} // this
+}
 
-type WorkoutAction = AddWorkoutAction | DeleteWorkoutAction;
+type WorkoutAction =
+  | AddWorkoutAction
+  | DeleteWorkoutAction
+  | UpdateWorkoutsAction;
 
-// const initialState: WorkoutJournalState = {
-//   workouts: [],
-//   id: "",
-//   date: "",
-//   title: "",
-//   description: "",
-//   completed: false,
-// };
 const initialState: WorkoutJournalState = {
   workouts: [],
-}; // this
+};
 export const workoutJournalReducer = (
   state = initialState,
   action: WorkoutAction
@@ -52,6 +41,12 @@ export const workoutJournalReducer = (
           (workout) => workout.id !== action.payload
         ),
       };
+    case UPDATE_WORKOUTS: {
+      return {
+        ...state,
+        workouts: action.payload,
+      };
+    }
     default:
       return state;
   }
