@@ -1,5 +1,4 @@
 const WorkoutPlans = () => {
-  return <div>WorkoutPlans</div>;
+  return <div>Workout plans</div>;
 };
-
 export default WorkoutPlans;
