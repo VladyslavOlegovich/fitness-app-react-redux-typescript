@@ -51,13 +51,13 @@ const WorkoutJournal: React.FC = () => {
   return (
     <Container>
       <h1>Workout Journal</h1>
-      {/* Форма додавання тренування */}
+
       <Row className="my-4">
         <Col>
           <WorkoutJournalForm />
         </Col>
       </Row>
-      {/* Список карток-тренувань */}
+
       <Row>
         {workouts.map((workout, index) => (
           <WorkoutJournalCard
@@ -69,7 +69,7 @@ const WorkoutJournal: React.FC = () => {
           />
         ))}
       </Row>
-      {/* Модальне вікно для детальної інформації про тренування */}
+
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Workout Details</Modal.Title>

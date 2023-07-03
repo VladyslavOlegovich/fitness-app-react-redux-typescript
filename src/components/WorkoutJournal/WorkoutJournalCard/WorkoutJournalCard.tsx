@@ -1,8 +1,6 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
 import { Col, Card, Form, Button } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
-import { updateWorkouts } from "../../../store/actions/workoutJournalActions";
 import { WorkoutData } from "../../../store/reducers/workoutJournalReducer";
 
 interface WorkoutCardProps {
@@ -18,19 +16,10 @@ const WorkoutJournalCard: React.FC<WorkoutCardProps> = ({
   onCardClick,
   index,
 }) => {
-  const dispatch = useDispatch();
+  const [completed, setCompleted] = useState(workout.completed);
 
   const handleCheckboxChange = () => {
-    const updatedWorkouts = [workout].map((w) => {
-      if (workout.id === w.id) {
-        return {
-          ...w,
-          completed: !w.completed,
-        };
-      }
-      return w;
-    });
-    dispatch(updateWorkouts(updatedWorkouts));
+    setCompleted(!completed);
   };
 
   const handleCardClick = () => {
@@ -45,12 +34,12 @@ const WorkoutJournalCard: React.FC<WorkoutCardProps> = ({
   return (
     <Col md={4} className="mb-2">
       <Card
-        className={`card ${workout.completed ? "completed-workout" : ""}`}
+        className={`card ${completed ? "completed-workout" : ""}`}
         onClick={handleCardClick}
       >
         <Card.Body>
           <p>№ {index + 1}</p>
-          <p> Дата: {workout.date}</p>
+          <p>Дата: {workout.date}</p>
           <p>Заголовок: {workout.title}</p>
         </Card.Body>
         <Card.Footer className="d-flex">
@@ -58,8 +47,9 @@ const WorkoutJournalCard: React.FC<WorkoutCardProps> = ({
             <Form.Check
               type="checkbox"
               label="Completed"
-              checked={workout.completed}
+              checked={completed}
               onChange={handleCheckboxChange}
+              onClick={(e) => e.stopPropagation()}
             />
             <Button
               variant="link"

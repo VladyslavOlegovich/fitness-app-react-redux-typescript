@@ -4,6 +4,8 @@ import {
   DELETE_WORKOUT,
   DeleteWorkoutAction,
   UPDATE_WORKOUTS,
+  UPDATE_WORKOUT_COMPLETED,
+  UpdateWorkoutCompletedAction,
   UpdateWorkoutsAction,
 } from "../actions/workoutJournalActions";
 
@@ -22,11 +24,13 @@ export interface WorkoutJournalState {
 type WorkoutAction =
   | AddWorkoutAction
   | DeleteWorkoutAction
-  | UpdateWorkoutsAction;
+  | UpdateWorkoutsAction
+  | UpdateWorkoutCompletedAction;
 
 const initialState: WorkoutJournalState = {
   workouts: [],
 };
+
 export const workoutJournalReducer = (
   state = initialState,
   action: WorkoutAction
@@ -45,6 +49,22 @@ export const workoutJournalReducer = (
       return {
         ...state,
         workouts: action.payload,
+      };
+    }
+    case UPDATE_WORKOUT_COMPLETED: {
+      const { workoutId, completed } = action.payload;
+      const updatedWorkouts = state.workouts.map((workout) => {
+        if (workout.id === workoutId) {
+          return {
+            ...workout,
+            completed,
+          };
+        }
+        return workout;
+      });
+      return {
+        ...state,
+        workouts: updatedWorkouts,
       };
     }
     default:
