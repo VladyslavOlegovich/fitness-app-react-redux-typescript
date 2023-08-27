@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import "./WorkoutPlans.css";
 const WorkoutPlans = () => {
-  const [selectedPlan, setSelectedPlan] = useState("" || null);
-  const handlePlanSelect = (plan: string | null) => {
-    setSelectedPlan(plan);
-  };
+  // const [selectedPlan, setSelectedPlan] = useState("" || null);
+  // const handlePlanSelect = (plan: string | null) => {
+  //   setSelectedPlan(plan);
+  // };
 
   return (
     <Container>
@@ -22,7 +22,7 @@ const WorkoutPlans = () => {
               <a
                 href="#"
                 className="btn btn-primary"
-                onClick={() => handlePlanSelect("Спалення жиру")}
+                // onClick={() => handlePlanSelect("Спалення жиру")}
               >
                 Обрати
               </a>
